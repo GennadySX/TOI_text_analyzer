@@ -40,12 +40,29 @@
 
 	<div class="container-contact100" >
 
+		@if(!empty($data))
+			<div class="chart" style=" height: auto; width:60%; position: absolute; left: 33%; transform: translate(-50%, 10%); ">
+				<div id="chartContainer" style="height: 370px; width: 100%;   "></div>
 
-			<label class="file-btn contact100-more" for="file">
+
+                <p style=" margin-top: 30px; text-align: center; background: white; color: black; border-radius: 5px;
+                        width: 150px; height: 30px; font-size: 1.2rem; position: relative; left: 50%; top: 10px; transform: translateX(-50%)">
+                    Текст источника </p>
+                <p style="color: white; margin-top: 0px; text-align: center; border: 1px solid gray; border-radius: 5px; padding: 10px; padding-top: 20px; margin-bottom: 20px;">
+					{{{$data['text']}}}
+				</p>
+
+			</div>
+
+
+		@else
+
+			<label class="contact100-more" for="file">
 				<i class="zmdi zmdi-file"></i>
 				Загрузите тесктовый файл
 			</label>
 
+		@endif
 
 
 
@@ -53,20 +70,45 @@
 
 
 
+				<script>
+					window.onload = function() {
 
+						var chart = new CanvasJS.Chart("chartContainer", {
+							animationEnabled: true,
+							theme: "light2",
+							title:{
+								text: "Повторения слов"
+							},
+							axisY: {
+								title: " раз"
+							},
+							data: [{
+								type: "column",
+								yValueFormatString: "# раз",
+								dataPoints: <?php echo json_encode($data['canvas'], JSON_NUMERIC_CHECK); ?>
+							}]
+						});
+						chart.render();
 
+					}
+				</script>
 
 		<div class="wrap-contact100" >
-			<form class="contact100-form validate-form" action="/insert" enctype="multipart/form-data">
+			<form class="contact100-form validate-form" action="/insert">
 				@csrf
 				<span class="contact100-form-title">
 					Текстовый анализатор
 				</span>
 
+				<div class="wrap-input100 validate-input" data-validate="Name is required">
+					<span class="label-input100">Ваше имя</span>
+					<input class="input100" type="text" name="username" placeholder="Введите ваше имя...">
+					<span class="focus-input100"></span>
+				</div>
 
 				<input type="file" id="file" style="display: none;" accept=".txt, .db ">
 
-				<div class="wrap-input100 validate-input" data-validate = "Введите текст!">
+				<div class="wrap-input100 validate-input" data-validate = "Message is required">
 					<span class="label-input100">Ваш текст </span>
 
 					<textarea class="input100" name="text" placeholder="Введите текст..." rows="15" ></textarea>
@@ -82,15 +124,18 @@
 					</div>
 				</div>
 			</form>
+            <div class="wrap-contact100-form-btn" style="background: #98e1b7">
+                <div class="contact100-form-bgbtn"></div>
+                <a href="/" class="contact100-form-btn" type="submit" style="color: black">
+                 <-   Главный
+                </a>
+            </div>
 		</div>
 	</div>
 
 
 
 	<div id="dropDownSelect1"></div>
-
-
-
 
 <!--===============================================================================================-->
 	<script src="{{asset('form/vendor/jquery/jquery-3.2.1.min.js')}}"></script>
@@ -135,28 +180,5 @@
 			height:  100% !important;
 		}
 	</style>
-
-
-<script>
-
-    $(document).ready(function () {
-        $('#file').change(function (evt) {
-            var f = evt.target.files[0];
-
-            if (f) {
-                var r = new FileReader();
-                r.onload = function(e) {
-                    var contents = e.target.result;
-                    $('textarea').html(contents);
-                }
-                r.readAsText(f);
-            } else {
-                alert("Не читаемый файл!");
-            }
-        });
-
-
-    });
-</script>
 </body>
 </html>

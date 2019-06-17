@@ -13,11 +13,10 @@ class textController extends Controller
     public function insert(Request $request)
     {
         $succ = DB::table('text')->insert([
-            'username' => $request->username,
             'text' => $request->text
         ]);
         if ($succ) {
-            return back();
+            return redirect('/result');
         }
     }
 
@@ -81,6 +80,6 @@ class textController extends Controller
 
         $get_data['repWord'] = $predlog;
 
-        return view('index')->with('data', $get_data);
+        return view('result')->with('data', $get_data);
     }
 }

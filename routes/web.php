@@ -11,7 +11,11 @@
 |
 */
 
-Route::get('/', 'textController@open');
+Route::get('/', function () {
+    return view('index');
+});
 
 Route::get('/insert', 'textController@insert');
 
+Route::get('/result', 'textController@open'
+);
